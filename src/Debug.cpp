@@ -38,6 +38,16 @@ void Debug::Log(string logMessage)
 	}
 }
 
+// Static method to log a message (wstring) to the log file.
+void Debug::Log(wstring logMessage)
+{
+	if (initiated)
+	{
+		_log << logMessage.data() << endl;	// Write the log message to the log file.
+		_log.flush();						// Flush the output to ensure the message is written immediately.
+	}
+}
+
 // Static method to log a message (string) and an integer value to the log file.
 void Debug::Log(string logMessage, int value)
 {
