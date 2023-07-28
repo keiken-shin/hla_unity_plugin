@@ -30,6 +30,19 @@ void baseFederate::connect(wstring federationName)
 		throw;
     }
     
+    try
+	{
+		// Call to connect to RTI -> informs the HLA runtime that the current class instance is ready to participate 
+		// in the federation and specifies that it should join the federation immediately
+		_rtiAmbassador->connect(*this, HLA_IMMEDIATE);
+	}
+	catch (const Exception& e)
+	{
+		Debug::Log(e.what());
+		throw;
+	}
+	Debug::Log("Connection established successfully!");
+
     _connect = true;
 }
 
@@ -37,6 +50,15 @@ void baseFederate::disconnect()
 {
     if (_connect)
     {
+        // Disconnect from the federation
+		try
+		{
+			_rtiAmbassador->disconnect();
+		}
+		catch (const FederateIsExecutionMember&) {}
+		catch (const CallNotAllowedFromWithinCallback&) {}
+		catch (const RTIinternalError&) {}
+
         _connect = false;
         Debug::Log("Disconnected.");
     }
