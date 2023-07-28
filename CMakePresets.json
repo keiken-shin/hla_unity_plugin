@@ -1,0 +1,34 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "windows",
+            "displayName": "Windows build with Microsoft Visual Studio 2017 (VC141 toolset)",
+            "generator": "Visual Studio 15 2017",
+            "toolset": "v141",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "windows",
+            "displayName": "Windows build with Microsoft Visual Studio 2017 (VC141 toolset)",
+            "configurePreset": "windows",
+            "configuration": "Debug",
+            "nativeToolOptions": ["-m"],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        }
+    ]
+}
