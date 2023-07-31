@@ -5,8 +5,10 @@
 #include <string>
 #include <memory>
 #include "Debug.h"
+#include "StringUtils.h"
 
 using namespace std;
+using namespace StringUtils;
 using namespace rti1516e;
 namespace RTI = rti1516e;
 

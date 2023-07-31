@@ -18,6 +18,7 @@ link_directories("C:/Program Files/prti1516e/lib/vc141_64")
 set(HEADER_FILES
     src/Debug.h
     src/baseFederate.h
+    src/StringUtils.h
 )
 
 # Add main.cpp file of project root directory as source file
@@ -25,6 +26,7 @@ set(SOURCES
     src/main.cpp
     src/Debug.cpp
     src/baseFederate.cpp
+    src/StringUtils.cpp
 )
 
 # Create a shared library (DLL) with the given sources

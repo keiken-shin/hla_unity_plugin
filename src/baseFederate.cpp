@@ -90,8 +90,9 @@ void baseFederate::connect(wstring federationName, wstring federateName, wstring
     Debug::Log("Successfully created federation execution");
 
     // Join the federation. If the federate name is taken,
-    // add a "_" sequence to it to make it unique and try again.
+    // add a sequence number to it to make it unique and try again.
     bool joined = false;
+    int sequenceNumber = 1;
     wstring uniqueName = federateName;
 
     while(!joined)
@@ -105,7 +106,8 @@ void baseFederate::connect(wstring federationName, wstring federateName, wstring
         }
         catch(const FederateNameAlreadyInUse&)
         {
-            uniqueName = federateName + L"_";
+            uniqueName = federateName + L"_" + toWString(sequenceNumber);
+            ++sequenceNumber;
         }
         catch(const Exception& e)
         {

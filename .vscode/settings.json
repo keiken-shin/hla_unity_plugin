@@ -68,6 +68,8 @@
         "xstddef": "cpp",
         "xtr1common": "cpp",
         "xtree": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "codecvt": "cpp",
+        "iostream": "cpp"
     }
 }

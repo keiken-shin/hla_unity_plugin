@@ -5,16 +5,13 @@
 #include <locale>
 #include <codecvt>
 #include "Debug.h"
+#include "StringUtils.h"
 #include "baseFederate.h"
 
 using namespace std;
+using namespace StringUtils;
 
 baseFederate _baseFederate;
-
-wstring stringToWstring(const std::string& str) {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-    return converter.from_bytes(str);
-}
 
 DLLExport void Connect(const char* federationName, const char* federateName, const char* fomFilePath)
 {
@@ -29,9 +26,9 @@ DLLExport void Connect(const char* federationName, const char* federateName, con
     string fomFilePathStr(fomFilePath);
 
     // Convert string to wstring
-    wstring federationNameW = stringToWstring(federationNameStr);
-    wstring federateNameW = stringToWstring(federateNameStr);
-    wstring fomFilePathW = stringToWstring(fomFilePathStr);
+    wstring federationNameW = str2wstr(federationNameStr);
+    wstring federateNameW = str2wstr(federateNameStr);
+    wstring fomFilePathW = str2wstr(fomFilePathStr);
 
     _baseFederate.connect(federationNameW, federateNameW, fomFilePathW);
 }
