@@ -1,5 +1,8 @@
 #pragma once
 #include <fstream>
+#include <iostream>
+#include <locale>
+#include <codecvt>
 
 using namespace std;
 

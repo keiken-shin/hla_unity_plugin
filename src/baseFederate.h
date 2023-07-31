@@ -25,6 +25,6 @@ public:
     ~baseFederate();
 
     // RTI connect/disconnect methods
-    void connect(wstring federationName);
+    void connect(wstring federationName, wstring federateName, wstring fomFilePath);
     void disconnect();
 };

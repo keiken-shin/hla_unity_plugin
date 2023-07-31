@@ -43,7 +43,13 @@ void Debug::Log(wstring logMessage)
 {
 	if (initiated)
 	{
-		_log << logMessage.data() << endl;	// Write the log message to the log file.
+		// Convert the std::wstring to UTF-8 encoded std::string
+    	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+    	std::string utf8Message = converter.to_bytes(logMessage);
+
+    	// Now you can write the UTF-8 encoded std::string to the std::wofstream
+   		_log << utf8Message << std::endl;
+
 		_log.flush();						// Flush the output to ensure the message is written immediately.
 	}
 }
