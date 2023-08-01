@@ -38,4 +38,7 @@ public:
 
     // Create object
     int createUnit();
+
+    // Update object
+    void updateUnit(BoxObjectData boxObjectData);
 };

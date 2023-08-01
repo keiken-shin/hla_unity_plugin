@@ -223,3 +223,27 @@ int baseFederate::createUnit()
         std::cerr << e.what() << '\n';
     }
 }
+
+void baseFederate::updateUnit(BoxObjectData boxObjectData)
+{
+    Debug::Log("Update unit: ", boxObjectData.id);
+
+    vector<BoxObject>::iterator it;
+    it = find_if(_box.begin(), _box.end(), [&](BoxObject const & obj) {
+        return obj.id == boxObjectData.id;
+    });
+
+    if (it != _box.end())
+    {
+        it->setBoxObject(boxObjectData);
+        AttributeHandleValueMap attributeMap;
+        it->getAttributeMap(&attributeMap);
+        _rtiAmbassador->updateAttributeValues(it->hlaInstanceHandle, attributeMap, VariableLengthData());
+
+        Debug::Log("Updated unit");
+    }
+    else
+    {
+        Debug::Log("Unable to find any object");
+    }
+}

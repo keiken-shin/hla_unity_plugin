@@ -49,3 +49,8 @@ DLLExport int CreateUnit()
 {
     return _baseFederate.createUnit();
 }
+
+DLLExport void UpdateUnit(BoxObjectData boxObjectData)
+{
+    _baseFederate.updateUnit(boxObjectData);
+}
