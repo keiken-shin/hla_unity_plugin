@@ -19,6 +19,10 @@ private:
     wstring _federationName;
     shared_ptr<RTIambassador> _rtiAmbassador;
     
+    ObjectClassHandle boxObject;
+    AttributeHandle positionXAttributeHandle;
+    AttributeHandle positionYAttributeHandle;
+    
 public:
     // Constructor
     baseFederate();
@@ -29,4 +33,7 @@ public:
     // RTI connect/disconnect methods
     void connect(wstring federationName, wstring federateName, wstring fomFilePath);
     void disconnect();
+
+    // Publish object event
+    void publishUnit();
 };

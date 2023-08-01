@@ -175,3 +175,25 @@ void baseFederate::disconnect()
         Debug::Log("Disconnected.");
     }
 }
+
+void baseFederate::publishUnit()
+{
+    Debug::Log("Start publishing unit...");
+
+    try
+    {
+        // Get handles for the object class and attributes
+        boxObject = _rtiAmbassador->getObjectClassHandle(L"Box");
+        positionXAttributeHandle = _rtiAmbassador->getAttributeHandle(boxObject, L"PositionX");
+        positionYAttributeHandle = _rtiAmbassador->getAttributeHandle(boxObject, L"PositionY");
+
+        // Publish the attributes
+        _rtiAmbassador->publishObjectClassAttributes(boxObject, { positionXAttributeHandle, positionYAttributeHandle });
+        Debug::Log("Published unit");
+    }
+    catch(const Exception& e)
+    {
+        Debug::Log(e.what());
+    }
+    
+}

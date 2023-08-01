@@ -39,3 +39,8 @@ DLLExport void Disconnect()
 
     Debug::close();
 }
+
+DLLExport void PublishUnit()
+{
+    _baseFederate.publishUnit();
+}
