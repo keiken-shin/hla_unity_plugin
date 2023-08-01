@@ -44,3 +44,8 @@ DLLExport void PublishUnit()
 {
     _baseFederate.publishUnit();
 }
+
+DLLExport int CreateUnit()
+{
+    return _baseFederate.createUnit();
+}

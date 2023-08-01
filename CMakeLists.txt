@@ -19,6 +19,8 @@ set(HEADER_FILES
     src/Debug.h
     src/baseFederate.h
     src/StringUtils.h
+    src/DataInterface.h
+    src/BoxObject.h
 )
 
 # Add main.cpp file of project root directory as source file
@@ -27,6 +29,7 @@ set(SOURCES
     src/Debug.cpp
     src/baseFederate.cpp
     src/StringUtils.cpp
+    src/BoxObject.cpp
 )
 
 # Create a shared library (DLL) with the given sources

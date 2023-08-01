@@ -71,5 +71,8 @@
         "xutility": "cpp",
         "codecvt": "cpp",
         "iostream": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "HLAPLUGIN"
+    ]
 }

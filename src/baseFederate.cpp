@@ -182,13 +182,17 @@ void baseFederate::publishUnit()
 
     try
     {
+        if (!BoxObject::initiated)
+        {
+            BoxObject::init(_rtiAmbassador);
+        }
+        
         // Get handles for the object class and attributes
-        boxObject = _rtiAmbassador->getObjectClassHandle(L"Box");
-        positionXAttributeHandle = _rtiAmbassador->getAttributeHandle(boxObject, L"PositionX");
-        positionYAttributeHandle = _rtiAmbassador->getAttributeHandle(boxObject, L"PositionY");
+        AttributeHandleSet boxObjectAttribute;
+        BoxObject::getAttributeSet(&boxObjectAttribute);
 
         // Publish the attributes
-        _rtiAmbassador->publishObjectClassAttributes(boxObject, { positionXAttributeHandle, positionYAttributeHandle });
+        _rtiAmbassador->publishObjectClassAttributes(BoxObject::boxObjectHandle, boxObjectAttribute);
         Debug::Log("Published unit");
     }
     catch(const Exception& e)
@@ -196,4 +200,26 @@ void baseFederate::publishUnit()
         Debug::Log(e.what());
     }
     
+}
+
+int baseFederate::createUnit()
+{
+    Debug::Log("Create unit");
+
+    try
+    {
+        // Create the Box object instance
+        ObjectInstanceHandle obj = _rtiAmbassador->registerObjectInstance(BoxObject::boxObjectHandle);
+
+        BoxObject newBox(obj);
+        _box.push_back(newBox);
+
+        Debug::Log("Created Vehicle: ", newBox.id);
+
+        return newBox.id;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }

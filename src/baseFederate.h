@@ -6,6 +6,7 @@
 #include <memory>
 #include "Debug.h"
 #include "StringUtils.h"
+#include "BoxObject.h"
 
 using namespace std;
 using namespace StringUtils;
@@ -19,9 +20,7 @@ private:
     wstring _federationName;
     shared_ptr<RTIambassador> _rtiAmbassador;
     
-    ObjectClassHandle boxObject;
-    AttributeHandle positionXAttributeHandle;
-    AttributeHandle positionYAttributeHandle;
+    vector<BoxObject> _box;  
     
 public:
     // Constructor
@@ -36,4 +35,7 @@ public:
 
     // Publish object event
     void publishUnit();
+
+    // Create object
+    int createUnit();
 };
