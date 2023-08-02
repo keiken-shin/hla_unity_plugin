@@ -11,7 +11,7 @@ namespace RTI = rti1516e;
 class BoxObject
 {
 public:
-    static HLAfloat32BE floatDecoder;
+    static HLAfloat32LE floatDecoder;
     static int idCount;
     static ObjectClassHandle boxObjectHandle;
 

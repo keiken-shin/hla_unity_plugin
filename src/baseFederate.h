@@ -41,4 +41,34 @@ public:
 
     // Update object
     void updateUnit(BoxObjectData boxObjectData);
+
+    // Subscribe object
+    void subscribeUnit();
+
+    ////////////////////////////////////////////////////////
+	//  Implementation methods to handle discovery event //
+	///////////////////////////////////////////////////////
+	void discoveryObjectImplementation(
+    ObjectInstanceHandle theObject,
+    ObjectClassHandle theObjectClass)
+    throw (
+        FederateInternalError);
+
+    //////////////////
+	//  Discovery  //
+	/////////////////
+	 void discoverObjectInstance(
+		ObjectInstanceHandle theObject,
+		ObjectClassHandle theObjectClass,
+		std::wstring const & theObjectInstanceName)
+		throw (
+			FederateInternalError);
+
+	 void discoverObjectInstance(
+		ObjectInstanceHandle theObject,
+		ObjectClassHandle theObjectClass,
+		std::wstring const & theObjectInstanceName,
+		FederateHandle producingFederate)
+		throw (
+			FederateInternalError);
 };

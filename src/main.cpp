@@ -54,3 +54,8 @@ DLLExport void UpdateUnit(BoxObjectData boxObjectData)
 {
     _baseFederate.updateUnit(boxObjectData);
 }
+
+DLLExport void SubscribeUnit()
+{
+    _baseFederate.subscribeUnit();
+}

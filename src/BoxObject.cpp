@@ -1,6 +1,6 @@
 #include "BoxObject.h"
 
-HLAfloat32BE BoxObject::floatDecoder;
+HLAfloat32LE BoxObject::floatDecoder;
 int BoxObject::idCount = 0;
 
 ObjectClassHandle BoxObject::boxObjectHandle;

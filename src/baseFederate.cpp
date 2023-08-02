@@ -115,7 +115,6 @@ void baseFederate::connect(wstring federationName, wstring federateName, wstring
         }
     }
     Debug::Log("Successfully joined the federation");
-
 }
 
 void baseFederate::disconnect()
@@ -240,6 +239,8 @@ void baseFederate::updateUnit(BoxObjectData boxObjectData)
         it->getAttributeMap(&attributeMap);
         _rtiAmbassador->updateAttributeValues(it->hlaInstanceHandle, attributeMap, VariableLengthData());
 
+        Debug::Log("PositionX: ", boxObjectData.positionX);
+        Debug::Log("PositionY: ", boxObjectData.positionY);
         Debug::Log("Updated unit");
     }
     else
@@ -247,3 +248,70 @@ void baseFederate::updateUnit(BoxObjectData boxObjectData)
         Debug::Log("Unable to find any object");
     }
 }
+
+void baseFederate::subscribeUnit()
+{
+    Debug::Log("Subscribe unit");
+
+    try
+    {
+        if (!BoxObject::initiated)
+        {
+            BoxObject::init(_rtiAmbassador);
+
+            Debug::Log("Initialized unit");
+        }
+
+        AttributeHandleSet boxAttribute;
+        BoxObject::getAttributeSet(&boxAttribute);
+
+        _rtiAmbassador->subscribeObjectClassAttributes(BoxObject::boxObjectHandle, boxAttribute);
+
+        Debug::Log("Unit subscribed");
+    }
+    catch(const Exception& e)
+    {
+        Debug::Log(e.what());
+    }
+    
+}
+
+
+////////////////////////////////////////////////////////
+//  Implementation methods to handle discovery event //
+///////////////////////////////////////////////////////
+void baseFederate::discoveryObjectImplementation(
+	ObjectInstanceHandle theObject,
+	ObjectClassHandle theObjectClass)
+    throw (FederateInternalError)
+{
+    Debug::Log("Object discovered");
+
+    if (theObjectClass == BoxObject::boxObjectHandle)
+    {
+        BoxObject newBox(theObject);
+        _box.push_back(newBox);
+    }
+    else 
+    {
+        Debug::Log("Do not recognize object class in discover");
+    }
+}
+
+//////////////////
+//  Discovery  //
+/////////////////
+void baseFederate::discoverObjectInstance(
+	ObjectInstanceHandle theObject,
+	ObjectClassHandle theObjectClass,
+	std::wstring const & theObjectInstanceName,
+	FederateHandle producingFederate)
+	throw (
+		FederateInternalError){discoveryObjectImplementation(theObject, theObjectClass);}
+
+void baseFederate::discoverObjectInstance(
+	ObjectInstanceHandle theObject,
+	ObjectClassHandle theObjectClass,
+	std::wstring const & theObjectInstanceName)
+	throw (
+		FederateInternalError) {discoveryObjectImplementation(theObject, theObjectClass);}
