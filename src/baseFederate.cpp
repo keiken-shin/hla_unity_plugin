@@ -213,7 +213,7 @@ int baseFederate::createUnit()
         BoxObject newBox(obj);
         _box.push_back(newBox);
 
-        Debug::Log("Created Vehicle: ", newBox.id);
+        Debug::Log("Created object: ", newBox.id);
 
         return newBox.id;
     }
