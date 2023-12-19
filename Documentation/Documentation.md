@@ -26,7 +26,7 @@ For example, a flight simulator can send information about the position and move
 
 ### **HLA Terminology?**
 
-![HLA Unity using Pitch RTI.png](./HLA_Unity_using_Pitch_RTI.png)
+![HLA Unity using Pitch RTI.png](./images/HLA_Unity_using_Pitch_RTI.png)
 
 The above diagram represents a basic topology of HLA, where a number of simulation systems connect to a bus service (RTI).
 
@@ -39,7 +39,7 @@ There are following concepts that are particularly important in the above repres
 
 ### **Content of FOM**
 
-![HLA Unity using Pitch RTI (1).png](./HLA_Unity_using_Pitch_RTI_(1).png)
+![HLA Unity using Pitch RTI (1).png](./images/HLA_Unity_using_Pitch_RTI_(1).png)
 
 In FOM, we have the following things:
 
@@ -54,7 +54,7 @@ In FOM, we have the following things:
 
 Enables federates to exchange data according to the FOM using Publish/Subscribe scheme. The RTI keeps track of which federate is publishing a certain data and which is subscribing to it.
 
-![HLA Unity using Pitch RTI (2).png](./HLA_Unity_using_Pitch_RTI_(2).png)
+![HLA Unity using Pitch RTI (2).png](./images/HLA_Unity_using_Pitch_RTI_(2).png)
 
 **Coordination Services**
 
@@ -124,50 +124,50 @@ For this session, we will go with a simple Box Model, where we have a “Box” 
 
 1. Open **‘SimGe’** application. Below is a snapshot of what it will look like.
 
-![Fom_1.png](./Fom_1.png)
+![Fom_1.png](./images/Fom_1.png)
 
 2. Go to File > New Project
 
-![FOM_2.png](./FOM_2.png)
+![FOM_2.png](./images/FOM_2.png)
 
 3. Provide project name and click ‘Create'.
 
-![FOM_3.png](./FOM_3.png)
+![FOM_3.png](./images/FOM_3.png)
 
 4. Next, go to Object Model > Create New FOM/SOM
 
-![FOM_4.png](./FOM_4.png)
+![FOM_4.png](./images/FOM_4.png)
 
 5. Then, you will see a screen (shown below). The first tab identification is important to make your FOM unique, so fill it out, accordingly.
 
-![FOM_5.png](./FOM_5.png)
+![FOM_5.png](./images/FOM_5.png)
 
 6. Next, navigate to Objects present in the right hand sidebar, and click on ‘Add new item’.
 
-![FOM_6.png](./FOM_6.png)
+![FOM_6.png](./images/FOM_6.png)
 
 7. Create an object class based on your requirement. Here, we will create a “Box” object class, under the parent `HLAobjectRoot` and select the actions whether it should `Publish or Subscribe or both`.
 
-![FOM_7.png](./FOM_7.png)
+![FOM_7.png](./images/FOM_7.png)
 
 8. Next, we will add some attributes under the “Box” object class. For that, go to `Attributes` and click 'Add new item'. You will see a window similar to the snapshot below. Fill it out and create an attribute under the “Box” object.
     
     As you ca see below, under Object we have “Box” selected and for data type we have `HLAfloat64Time` and other details.
     
 
-![FOM_8.png](./FOM_8.png)
+![FOM_8.png](./images/FOM_8.png)
 
-![FOM_9.png](./FOM_9.png)
+![FOM_9.png](./images/FOM_9.png)
 
 9. What if we need a custom data type rather than the one present in the data type options. Simply go to ‘Data types’. Under the Simple Data Type Table, ‘Add new item’.
 
-![FOM_10.png](./FOM_10.png)
+![FOM_10.png](./images/FOM_10.png)
 
 You will see a popup like this (shown below), and you can create a custom type with a certain default representation.
 
-![FOM_11.png](./FOM_11.png)
+![FOM_11.png](./images/FOM_11.png)
 
-![You can now switch the data type of existing attributes or create new ones.](./FOM_12.png)
+![You can now switch the data type of existing attributes or create new ones.](./images/FOM_12.png)
 
 You can now switch the data type of existing attributes or create new ones.
 
@@ -176,13 +176,13 @@ You can now switch the data type of existing attributes or create new ones.
     Go to: Object Model > Export > Export to HLA-1.3 FED/HLA1516-2010 FDD
     
 
-![You will see a confirmation popup.](./FOM_13.png)
+![You will see a confirmation popup.](./images/FOM_13.png)
 
 You will see a confirmation popup.
 
 Select you FOM and for standard, go for HLA 1516-2010 FDD, as it is an evolved version, generating XML FOM file, which we will need when utilizing the plugin.
 
-![FOM_14.png](./FOM_14.png)
+![FOM_14.png](./images/FOM_14.png)
 
 With this, we have our `BoxFOM.xml` file ready for use.
 
@@ -201,7 +201,7 @@ So to follow, as shown in the diagram below, we will have a FOM file defining ou
 - Update Object attributes
 - Disconnect from RTI+
 
-![HLA Unity using Pitch RTI (3).png](./HLA_Unity_using_Pitch_RTI_(3).png)
+![HLA Unity using Pitch RTI (3).png](./images/HLA_Unity_using_Pitch_RTI_(3).png)
 
 <aside>
 💡 **Note:** Initializing a C++ project with CMake.
@@ -772,13 +772,13 @@ void baseFederate::subscribeUnit()
 
 Below are the screenshots of how we can verify that our simulation has established connection with RTI and have published mentioned object/event data.
 
-![RTI_output_(1)](./RTI_output_(1).png)
+![RTI_output_(1)](./images/RTI_output_(1).png)
 
-![RTI_output_(2)](./RTI_output_(2).png)
+![RTI_output_(2)](./images/RTI_output_(2).png)
 
-![RTI_output_(3)](./RTI_output_(3).png)
+![RTI_output_(3)](./images/RTI_output_(3).png)
 
-![RTI_output_(4)](./RTI_output_(4).png)
+![RTI_output_(4)](./images/RTI_output_(4).png)
 
 ### **References & Resources**
 
