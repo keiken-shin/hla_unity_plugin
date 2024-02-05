@@ -4,6 +4,7 @@
 #include <string>
 #include <locale>
 #include <codecvt>
+#include <Windows.h>
 #include "Debug.h"
 #include "StringUtils.h"
 #include "baseFederate.h"
@@ -58,4 +59,18 @@ DLLExport void UpdateUnit(BoxObjectData boxObjectData)
 DLLExport void SubscribeUnit()
 {
     _baseFederate.subscribeUnit();
+}
+
+DLLExport BoxObjectData* GetBoxes(int &size) {
+	vector<BoxObject> data = _baseFederate.getBoxObject();
+	size = data.size();
+	BoxObjectData *dataToReturn = (BoxObjectData*)CoTaskMemAlloc(sizeof(BoxObjectData) * size);
+
+
+	for (int i=0; i<size; i++)
+	{
+		dataToReturn[i] = data[i].getBoxObjectData();
+		Debug::_log << "Get box main: ID: " << dataToReturn[i].id << " pozX: " << dataToReturn[i].positionX << " pozY: " << dataToReturn[i].positionY << endl;
+	}
+	return dataToReturn;
 }

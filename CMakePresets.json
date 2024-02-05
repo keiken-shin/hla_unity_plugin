@@ -3,9 +3,9 @@
     "configurePresets": [
         {
             "name": "windows",
-            "displayName": "Windows build with Microsoft Visual Studio 2017 (VC141 toolset)",
-            "generator": "Visual Studio 15 2017",
-            "toolset": "v141",
+            "displayName": "Windows build with Microsoft Visual Studio 2022",
+            "generator": "Visual Studio 17 2022",
+            "toolset": "v143",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
@@ -20,7 +20,7 @@
     "buildPresets": [
         {
             "name": "windows",
-            "displayName": "Windows build with Microsoft Visual Studio 2017 (VC141 toolset)",
+            "displayName": "Windows build with Microsoft Visual Studio 2022",
             "configurePreset": "windows",
             "configuration": "Debug",
             "nativeToolOptions": ["-m"],

@@ -20,7 +20,7 @@ private:
     wstring _federationName;
     shared_ptr<RTIambassador> _rtiAmbassador;
     
-    vector<BoxObject> _box;  
+    vector<BoxObject> _boxes;  
     
 public:
     // Constructor
@@ -33,6 +33,9 @@ public:
     void connect(wstring federationName, wstring federateName, wstring fomFilePath);
     void disconnect();
 
+    // Get Units
+    vector<BoxObject> getBoxObject();
+
     // Publish object event
     void publishUnit();
 
@@ -41,6 +44,9 @@ public:
 
     // Update object
     void updateUnit(BoxObjectData boxObjectData);
+
+    // Remove object
+    void removeUnit(BoxObjectData BoxObjectData);
 
     // Subscribe object
     void subscribeUnit();

@@ -175,6 +175,17 @@ void baseFederate::disconnect()
     }
 }
 
+/////////////////////////////////////////////
+//  Implementation methods to get objects  //
+/////////////////////////////////////////////
+vector<BoxObject> baseFederate::getBoxObject() 
+{
+    return _boxes;
+}
+
+/////////////////////////////////////////////////////
+//  Implementation methods to publish object event //
+/////////////////////////////////////////////////////
 void baseFederate::publishUnit()
 {
     Debug::Log("Start publishing unit...");
@@ -201,6 +212,9 @@ void baseFederate::publishUnit()
     
 }
 
+////////////////////////////////////////////////////
+//  Implementation methods to create object event //
+////////////////////////////////////////////////////
 int baseFederate::createUnit()
 {
     Debug::Log("Create unit");
@@ -211,7 +225,7 @@ int baseFederate::createUnit()
         ObjectInstanceHandle obj = _rtiAmbassador->registerObjectInstance(BoxObject::boxObjectHandle);
 
         BoxObject newBox(obj);
-        _box.push_back(newBox);
+        _boxes.push_back(newBox);
 
         Debug::Log("Created object: ", newBox.id);
 
@@ -223,16 +237,20 @@ int baseFederate::createUnit()
     }
 }
 
+////////////////////////////////////////////////////
+//  Implementation methods to update object event //
+////////////////////////////////////////////////////
 void baseFederate::updateUnit(BoxObjectData boxObjectData)
 {
     Debug::Log("Update unit: ", boxObjectData.id);
 
     vector<BoxObject>::iterator it;
-    it = find_if(_box.begin(), _box.end(), [&](BoxObject const & obj) {
+    it = find_if(_boxes.begin(), _boxes.end(), [&](BoxObject const & obj) 
+    {
         return obj.id == boxObjectData.id;
     });
 
-    if (it != _box.end())
+    if (it != _boxes.end())
     {
         it->setBoxObject(boxObjectData);
         AttributeHandleValueMap attributeMap;
@@ -249,6 +267,32 @@ void baseFederate::updateUnit(BoxObjectData boxObjectData)
     }
 }
 
+////////////////////////////////////////////////////
+//  Implementation methods to remove object event //
+////////////////////////////////////////////////////
+void baseFederate::removeUnit(BoxObjectData boxObjectData) 
+{
+    Debug::Log("Remove Unit");
+
+    vector<BoxObject>::iterator box;
+    box = std::find_if(_boxes.begin(), _boxes.end(), [&](BoxObject const& obj) {
+        return obj.id == boxObjectData.id;
+    });
+
+    if (box != _boxes.end()) 
+    {
+        _rtiAmbassador->deleteObjectInstance(box->hlaInstanceHandle, VariableLengthData());
+        _boxes.erase(box);
+    }
+    else 
+    {
+        Debug::Log("No box object found");
+    }
+}
+
+///////////////////////////////////////////////////////
+//  Implementation methods to subscribe object event //
+//////////////////////////////////////////////////////
 void baseFederate::subscribeUnit()
 {
     Debug::Log("Subscribe unit");
@@ -290,7 +334,7 @@ void baseFederate::discoveryObjectImplementation(
     if (theObjectClass == BoxObject::boxObjectHandle)
     {
         BoxObject newBox(theObject);
-        _box.push_back(newBox);
+        _boxes.push_back(newBox);
     }
     else 
     {
