@@ -36,3 +36,4 @@
 Done, now use the `.dll` file in you Unity app 😊👌.
 
 >💡 Note: For detail setup and working view [Documentation.md](./Documentation/Documentation.md)
+> 🌏 Reference: [HlaUnity project](https://github.com/Damenus/hlaunity)
