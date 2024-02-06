@@ -116,6 +116,10 @@ void BoxObject::setBoxObject(BoxObjectData boxObjectData)
 
     positionX = boxObjectData.positionX;
     positionY = boxObjectData.positionY;
+
+    Debug::Log("Begin set box data");
+    Debug::_log << positionX << ", " << positionX << endl;
+    Debug::Log("End set box data");
 }
 
 // Get data to send to other simulations
@@ -128,6 +132,10 @@ BoxObjectData BoxObject::getBoxObjectData()
     data.id = id;
     data.positionX = positionX;
     data.positionY = positionY;
-
+    
+    Debug::Log("Begin read box data");
+    Debug::_log << data.id << ", " << data.positionX << ", " << data.positionY << endl;
+    Debug::Log("End read box data");
+    
     return data;
 }

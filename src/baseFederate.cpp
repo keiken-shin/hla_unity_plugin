@@ -175,6 +175,17 @@ void baseFederate::disconnect()
     }
 }
 
+/////////////////////////////////////////////
+//  Implementation methods to get objects  //
+/////////////////////////////////////////////
+vector<BoxObject> baseFederate::getBoxObject() 
+{
+    return _boxes;
+}
+
+/////////////////////////////////////////////////////
+//  Implementation methods to publish object event //
+/////////////////////////////////////////////////////
 void baseFederate::publishUnit()
 {
     Debug::Log("Start publishing unit...");
@@ -201,6 +212,9 @@ void baseFederate::publishUnit()
     
 }
 
+////////////////////////////////////////////////////
+//  Implementation methods to create object event //
+////////////////////////////////////////////////////
 int baseFederate::createUnit()
 {
     Debug::Log("Create unit");
@@ -211,7 +225,7 @@ int baseFederate::createUnit()
         ObjectInstanceHandle obj = _rtiAmbassador->registerObjectInstance(BoxObject::boxObjectHandle);
 
         BoxObject newBox(obj);
-        _box.push_back(newBox);
+        _boxes.push_back(newBox);
 
         Debug::Log("Created object: ", newBox.id);
 
@@ -223,16 +237,20 @@ int baseFederate::createUnit()
     }
 }
 
+////////////////////////////////////////////////////
+//  Implementation methods to update object event //
+////////////////////////////////////////////////////
 void baseFederate::updateUnit(BoxObjectData boxObjectData)
 {
     Debug::Log("Update unit: ", boxObjectData.id);
 
     vector<BoxObject>::iterator it;
-    it = find_if(_box.begin(), _box.end(), [&](BoxObject const & obj) {
+    it = find_if(_boxes.begin(), _boxes.end(), [&](BoxObject const & obj) 
+    {
         return obj.id == boxObjectData.id;
     });
 
-    if (it != _box.end())
+    if (it != _boxes.end())
     {
         it->setBoxObject(boxObjectData);
         AttributeHandleValueMap attributeMap;
@@ -249,6 +267,32 @@ void baseFederate::updateUnit(BoxObjectData boxObjectData)
     }
 }
 
+////////////////////////////////////////////////////
+//  Implementation methods to remove object event //
+////////////////////////////////////////////////////
+void baseFederate::removeUnit(BoxObjectData boxObjectData) 
+{
+    Debug::Log("Remove Unit");
+
+    vector<BoxObject>::iterator box;
+    box = std::find_if(_boxes.begin(), _boxes.end(), [&](BoxObject const& obj) {
+        return obj.id == boxObjectData.id;
+    });
+
+    if (box != _boxes.end()) 
+    {
+        _rtiAmbassador->deleteObjectInstance(box->hlaInstanceHandle, VariableLengthData());
+        _boxes.erase(box);
+    }
+    else 
+    {
+        Debug::Log("No box object found");
+    }
+}
+
+///////////////////////////////////////////////////////
+//  Implementation methods to subscribe object event //
+//////////////////////////////////////////////////////
 void baseFederate::subscribeUnit()
 {
     Debug::Log("Subscribe unit");
@@ -290,11 +334,111 @@ void baseFederate::discoveryObjectImplementation(
     if (theObjectClass == BoxObject::boxObjectHandle)
     {
         BoxObject newBox(theObject);
-        _box.push_back(newBox);
+        _boxes.push_back(newBox);
     }
     else 
     {
         Debug::Log("Do not recognize object class in discover");
+    }
+}
+
+////////////////////////////////////////////////////////
+//  Implementation methods to handle reflect event //
+///////////////////////////////////////////////////////
+void baseFederate::reflectAttributeValuesImpl(
+    ObjectInstanceHandle theObject,
+    AttributeHandleValueMap const & theAttributeValues)
+    throw (FederateInternalError)
+{
+    Debug::Log("Reflect attribute value");
+
+    ObjectClassHandle theObjectClass = _rtiAmbassador->getKnownObjectClassHandle(theObject);
+    if (theObjectClass == BoxObject::boxObjectHandle) 
+    {
+        Debug::Log("Reflect attributes for box");
+
+        vector<BoxObject>::iterator it;
+        it = std::find_if(_boxes.begin(), _boxes.end(), [&](BoxObject const& obj) {
+            return obj.hlaInstanceHandle == theObject;
+        });
+
+        if (it != _boxes.end()) {
+            Debug::Log("Update attribute boxes: ", it->id);
+            it->updateAttributes(theAttributeValues);
+        }
+        else
+        {
+            Debug::Log("Can't find any object in boxes - reflect attribute");
+        }
+    }
+    else 
+    {
+        Debug::Log("Unable to recognize the object class in reflected attributes");    
+    }
+}
+
+////////////////////////////////////////////////////////////
+//  Implementation methods to handle remove object event //
+///////////////////////////////////////////////////////////
+void baseFederate::removeObjectInstanceImpl(
+    ObjectInstanceHandle theObject)
+    throw (FederateInternalError)
+{
+    ObjectClassHandle theObjectClass = _rtiAmbassador->getKnownObjectClassHandle(theObject);
+    if (theObjectClass == BoxObject::boxObjectHandle) 
+    {
+        vector<BoxObject>::iterator it;
+        it = std::find_if(_boxes.begin(), _boxes.end(), [&](BoxObject const & obj) {
+            return obj.hlaInstanceHandle == theObject;
+        });
+
+        if (it != _boxes.end())
+        {
+            _boxes.erase(it);
+        }
+        else
+        {
+            Debug::Log("Unable to find any object in boxes - remove object");
+        }
+    }
+    else
+    {
+        Debug::Log("Unable to recognize object class in remove object");
+    }
+}
+
+////////////////////////////////////////////////////////////////
+//  Implementation methods to handle provide Attribute event //
+///////////////////////////////////////////////////////////////
+void baseFederate::provideAttributeValueUpdateImpl(
+    ObjectInstanceHandle theObject,
+    AttributeHandleSet const & theAttributes)
+    throw (FederateInternalError)
+{
+    Debug::Log("Provide Attributes");
+    ObjectClassHandle theObjectClass = _rtiAmbassador->getKnownObjectClassHandle(theObject);
+    AttributeHandleValueMap attributeMap;
+
+    if (theObjectClass == BoxObject::boxObjectHandle)
+    {
+        vector<BoxObject>::iterator it;
+        it = std::find_if(_boxes.begin(), _boxes.end(), [&](BoxObject const & obj) {
+            return obj.hlaInstanceHandle == theObject;
+        });
+
+        if (it != _boxes.end())
+        {
+            it->getAttributeMap(theAttributes, &attributeMap);
+            _rtiAmbassador->updateAttributeValues(theObject, attributeMap, VariableLengthData());
+        }
+        else
+        {
+            Debug::Log("Unable to find any object in boxes - provide attribute");
+        }
+    }
+    else
+    {
+        Debug::Log("Unable to recognize object class in provided attribute");
     }
 }
 
@@ -315,3 +459,98 @@ void baseFederate::discoverObjectInstance(
 	std::wstring const & theObjectInstanceName)
 	throw (
 		FederateInternalError) {discoveryObjectImplementation(theObject, theObjectClass);}
+
+////////////////
+//  Reflect  //
+///////////////
+void baseFederate::reflectAttributeValues(
+    ObjectInstanceHandle theObject,
+    AttributeHandleValueMap const & theAttributeValues,
+    VariableLengthData const & theUserSuppliedTag,
+    OrderType sentOrder,
+    TransportationType theType,
+    SupplementalReflectInfo theReflectInfo)
+    throw (FederateInternalError)
+{
+    reflectAttributeValuesImpl(theObject, theAttributeValues);
+}
+
+void baseFederate::reflectAttributeValues(
+    ObjectInstanceHandle theObject,
+    AttributeHandleValueMap const & theAttributeValues,
+    VariableLengthData const & theUserSuppliedTag,
+    OrderType sentOrder,
+    TransportationType theType,
+    LogicalTime const & theTime,
+    OrderType receivedOrder,
+    SupplementalReflectInfo theReflectInfo)
+    throw (FederateInternalError)
+{
+    reflectAttributeValuesImpl(theObject, theAttributeValues);
+}
+
+void baseFederate::reflectAttributeValues(
+    ObjectInstanceHandle theObject,
+    AttributeHandleValueMap const & theAttributeValues,
+    VariableLengthData const & theUserSuppliedTag,
+    OrderType sentOrder,
+    TransportationType theType,
+    LogicalTime const & theTime,
+    OrderType receivedOrder,
+    MessageRetractionHandle theHandle,
+    SupplementalReflectInfo theReflectInfo)
+    throw (FederateInternalError)
+{
+    reflectAttributeValuesImpl(theObject, theAttributeValues);
+}
+
+//////////////
+//  Remove  //
+/////////////
+void baseFederate::removeObjectInstance(
+        ObjectInstanceHandle theObject,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        SupplementalRemoveInfo theRemoveInfo)
+        throw (FederateInternalError)
+{
+    removeObjectInstanceImpl(theObject);
+}
+
+void baseFederate::removeObjectInstance(
+    ObjectInstanceHandle theObject,
+    VariableLengthData const & theUserSuppliedTag,
+    OrderType sentOrder,
+    LogicalTime const & theTime,
+    OrderType receivedOrder,
+    SupplementalRemoveInfo theRemoveInfo)
+    throw (FederateInternalError)
+{
+    removeObjectInstanceImpl(theObject);
+}
+
+void baseFederate::removeObjectInstance(
+    ObjectInstanceHandle theObject,
+    VariableLengthData const & theUserSuppliedTag,
+    OrderType sentOrder,
+    LogicalTime const & theTime,
+    OrderType receivedOrder,
+    MessageRetractionHandle theHandle,
+    SupplementalRemoveInfo theRemoveInfo)
+    throw (FederateInternalError)
+{
+    removeObjectInstanceImpl(theObject);
+}
+
+
+///////////////
+//  Provide  //
+//////////////
+void baseFederate::provideAttributeValueUpdate(
+    ObjectInstanceHandle theObject,
+    AttributeHandleSet const & theAttributes,
+    VariableLengthData const & theUserSuppliedTag)
+    throw (FederateInternalError)
+{
+    provideAttributeValueUpdateImpl(theObject, theAttributes);
+}

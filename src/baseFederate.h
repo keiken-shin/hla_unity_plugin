@@ -20,7 +20,7 @@ private:
     wstring _federationName;
     shared_ptr<RTIambassador> _rtiAmbassador;
     
-    vector<BoxObject> _box;  
+    vector<BoxObject> _boxes;  
     
 public:
     // Constructor
@@ -33,6 +33,9 @@ public:
     void connect(wstring federationName, wstring federateName, wstring fomFilePath);
     void disconnect();
 
+    // Get Units
+    vector<BoxObject> getBoxObject();
+
     // Publish object event
     void publishUnit();
 
@@ -42,6 +45,9 @@ public:
     // Update object
     void updateUnit(BoxObjectData boxObjectData);
 
+    // Remove object
+    void removeUnit(BoxObjectData BoxObjectData);
+
     // Subscribe object
     void subscribeUnit();
 
@@ -49,10 +55,32 @@ public:
 	//  Implementation methods to handle discovery event //
 	///////////////////////////////////////////////////////
 	void discoveryObjectImplementation(
-    ObjectInstanceHandle theObject,
-    ObjectClassHandle theObjectClass)
-    throw (
-        FederateInternalError);
+        ObjectInstanceHandle theObject, 
+        ObjectClassHandle theObjectClass)
+        throw (FederateInternalError);
+
+    ////////////////////////////////////////////////////////
+	//  Implementation methods to handle reflect event //
+	///////////////////////////////////////////////////////
+    void reflectAttributeValuesImpl(
+        ObjectInstanceHandle theObject,
+        AttributeHandleValueMap const & theAttributeValues)
+        throw (FederateInternalError);
+
+    ////////////////////////////////////////////////////////////
+    //  Implementation methods to handle remove object event //
+    ///////////////////////////////////////////////////////////
+    void removeObjectInstanceImpl(
+        ObjectInstanceHandle theObject)
+        throw (FederateInternalError);
+
+    ////////////////////////////////////////////////////////////////
+	//  Implementation methods to handle provide Attribute event //
+	///////////////////////////////////////////////////////////////
+    void provideAttributeValueUpdateImpl(
+        ObjectInstanceHandle theObject,
+        AttributeHandleSet const & theAttributes)
+        throw (FederateInternalError);
 
     //////////////////
 	//  Discovery  //
@@ -71,4 +99,77 @@ public:
 		FederateHandle producingFederate)
 		throw (
 			FederateInternalError);
+
+    ////////////////
+	//  Reflect  //
+	///////////////
+    void reflectAttributeValues(
+        ObjectInstanceHandle theObject,
+        AttributeHandleValueMap const & theAttributeValues,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        TransportationType theType,
+        SupplementalReflectInfo theReflectInfo)
+        throw (FederateInternalError);
+
+    void reflectAttributeValues(
+        ObjectInstanceHandle theObject,
+        AttributeHandleValueMap const & theAttributeValues,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        TransportationType theType,
+        LogicalTime const & theTime,
+        OrderType receivedOrder,
+        SupplementalReflectInfo theReflectInfo)
+        throw (FederateInternalError);
+
+    void reflectAttributeValues(
+        ObjectInstanceHandle theObject,
+        AttributeHandleValueMap const & theAttributeValues,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        TransportationType theType,
+        LogicalTime const & theTime,
+        OrderType receivedOrder,
+        MessageRetractionHandle theHandle,
+        SupplementalReflectInfo theReflectInfo)
+        throw (FederateInternalError);
+
+    //////////////
+	//  Remove  //
+	/////////////
+    void removeObjectInstance(
+        ObjectInstanceHandle theObject,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        SupplementalRemoveInfo theRemoveInfo)
+        throw (FederateInternalError);
+
+    void removeObjectInstance(
+        ObjectInstanceHandle theObject,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        LogicalTime const & theTime,
+        OrderType receivedOrder,
+        SupplementalRemoveInfo theRemoveInfo)
+        throw (FederateInternalError);
+
+    void removeObjectInstance(
+        ObjectInstanceHandle theObject,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        LogicalTime const & theTime,
+        OrderType receivedOrder,
+        MessageRetractionHandle theHandle,
+        SupplementalRemoveInfo theRemoveInfo)
+        throw (FederateInternalError);
+
+    ///////////////
+	//  Provide  //
+	//////////////
+    void provideAttributeValueUpdate(
+        ObjectInstanceHandle theObject,
+        AttributeHandleSet const & theAttributes,
+        VariableLengthData const & theUserSuppliedTag)
+        throw (FederateInternalError);
 };
