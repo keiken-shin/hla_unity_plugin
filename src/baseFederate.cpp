@@ -342,6 +342,106 @@ void baseFederate::discoveryObjectImplementation(
     }
 }
 
+////////////////////////////////////////////////////////
+//  Implementation methods to handle reflect event //
+///////////////////////////////////////////////////////
+void baseFederate::reflectAttributeValuesImpl(
+    ObjectInstanceHandle theObject,
+    AttributeHandleValueMap const & theAttributeValues)
+    throw (FederateInternalError)
+{
+    Debug::Log("Reflect attribute value");
+
+    ObjectClassHandle theObjectClass = _rtiAmbassador->getKnownObjectClassHandle(theObject);
+    if (theObjectClass == BoxObject::boxObjectHandle) 
+    {
+        Debug::Log("Reflect attributes for box");
+
+        vector<BoxObject>::iterator it;
+        it = std::find_if(_boxes.begin(), _boxes.end(), [&](BoxObject const& obj) {
+            return obj.hlaInstanceHandle == theObject;
+        });
+
+        if (it != _boxes.end()) {
+            Debug::Log("Update attribute boxes: ", it->id);
+            it->updateAttributes(theAttributeValues);
+        }
+        else
+        {
+            Debug::Log("Can't find any object in boxes - reflect attribute");
+        }
+    }
+    else 
+    {
+        Debug::Log("Unable to recognize the object class in reflected attributes");    
+    }
+}
+
+////////////////////////////////////////////////////////////
+//  Implementation methods to handle remove object event //
+///////////////////////////////////////////////////////////
+void baseFederate::removeObjectInstanceImpl(
+    ObjectInstanceHandle theObject)
+    throw (FederateInternalError)
+{
+    ObjectClassHandle theObjectClass = _rtiAmbassador->getKnownObjectClassHandle(theObject);
+    if (theObjectClass == BoxObject::boxObjectHandle) 
+    {
+        vector<BoxObject>::iterator it;
+        it = std::find_if(_boxes.begin(), _boxes.end(), [&](BoxObject const & obj) {
+            return obj.hlaInstanceHandle == theObject;
+        });
+
+        if (it != _boxes.end())
+        {
+            _boxes.erase(it);
+        }
+        else
+        {
+            Debug::Log("Unable to find any object in boxes - remove object");
+        }
+    }
+    else
+    {
+        Debug::Log("Unable to recognize object class in remove object");
+    }
+}
+
+////////////////////////////////////////////////////////////////
+//  Implementation methods to handle provide Attribute event //
+///////////////////////////////////////////////////////////////
+void baseFederate::provideAttributeValueUpdateImpl(
+    ObjectInstanceHandle theObject,
+    AttributeHandleSet const & theAttributes)
+    throw (FederateInternalError)
+{
+    Debug::Log("Provide Attributes");
+    ObjectClassHandle theObjectClass = _rtiAmbassador->getKnownObjectClassHandle(theObject);
+    AttributeHandleValueMap attributeMap;
+
+    if (theObjectClass == BoxObject::boxObjectHandle)
+    {
+        vector<BoxObject>::iterator it;
+        it = std::find_if(_boxes.begin(), _boxes.end(), [&](BoxObject const & obj) {
+            return obj.hlaInstanceHandle == theObject;
+        });
+
+        if (it != _boxes.end())
+        {
+            it->getAttributeMap(theAttributes, &attributeMap);
+            _rtiAmbassador->updateAttributeValues(theObject, attributeMap, VariableLengthData());
+        }
+        else
+        {
+            Debug::Log("Unable to find any object in boxes - provide attribute");
+        }
+    }
+    else
+    {
+        Debug::Log("Unable to recognize object class in provided attribute");
+    }
+}
+
 //////////////////
 //  Discovery  //
 /////////////////
@@ -359,3 +459,98 @@ void baseFederate::discoverObjectInstance(
 	std::wstring const & theObjectInstanceName)
 	throw (
 		FederateInternalError) {discoveryObjectImplementation(theObject, theObjectClass);}
+
+////////////////
+//  Reflect  //
+///////////////
+void baseFederate::reflectAttributeValues(
+    ObjectInstanceHandle theObject,
+    AttributeHandleValueMap const & theAttributeValues,
+    VariableLengthData const & theUserSuppliedTag,
+    OrderType sentOrder,
+    TransportationType theType,
+    SupplementalReflectInfo theReflectInfo)
+    throw (FederateInternalError)
+{
+    reflectAttributeValuesImpl(theObject, theAttributeValues);
+}
+
+void baseFederate::reflectAttributeValues(
+    ObjectInstanceHandle theObject,
+    AttributeHandleValueMap const & theAttributeValues,
+    VariableLengthData const & theUserSuppliedTag,
+    OrderType sentOrder,
+    TransportationType theType,
+    LogicalTime const & theTime,
+    OrderType receivedOrder,
+    SupplementalReflectInfo theReflectInfo)
+    throw (FederateInternalError)
+{
+    reflectAttributeValuesImpl(theObject, theAttributeValues);
+}
+
+void baseFederate::reflectAttributeValues(
+    ObjectInstanceHandle theObject,
+    AttributeHandleValueMap const & theAttributeValues,
+    VariableLengthData const & theUserSuppliedTag,
+    OrderType sentOrder,
+    TransportationType theType,
+    LogicalTime const & theTime,
+    OrderType receivedOrder,
+    MessageRetractionHandle theHandle,
+    SupplementalReflectInfo theReflectInfo)
+    throw (FederateInternalError)
+{
+    reflectAttributeValuesImpl(theObject, theAttributeValues);
+}
+
+//////////////
+//  Remove  //
+/////////////
+void baseFederate::removeObjectInstance(
+        ObjectInstanceHandle theObject,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        SupplementalRemoveInfo theRemoveInfo)
+        throw (FederateInternalError)
+{
+    removeObjectInstanceImpl(theObject);
+}
+
+void baseFederate::removeObjectInstance(
+    ObjectInstanceHandle theObject,
+    VariableLengthData const & theUserSuppliedTag,
+    OrderType sentOrder,
+    LogicalTime const & theTime,
+    OrderType receivedOrder,
+    SupplementalRemoveInfo theRemoveInfo)
+    throw (FederateInternalError)
+{
+    removeObjectInstanceImpl(theObject);
+}
+
+void baseFederate::removeObjectInstance(
+    ObjectInstanceHandle theObject,
+    VariableLengthData const & theUserSuppliedTag,
+    OrderType sentOrder,
+    LogicalTime const & theTime,
+    OrderType receivedOrder,
+    MessageRetractionHandle theHandle,
+    SupplementalRemoveInfo theRemoveInfo)
+    throw (FederateInternalError)
+{
+    removeObjectInstanceImpl(theObject);
+}
+
+
+///////////////
+//  Provide  //
+//////////////
+void baseFederate::provideAttributeValueUpdate(
+    ObjectInstanceHandle theObject,
+    AttributeHandleSet const & theAttributes,
+    VariableLengthData const & theUserSuppliedTag)
+    throw (FederateInternalError)
+{
+    provideAttributeValueUpdateImpl(theObject, theAttributes);
+}

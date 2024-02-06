@@ -55,10 +55,32 @@ public:
 	//  Implementation methods to handle discovery event //
 	///////////////////////////////////////////////////////
 	void discoveryObjectImplementation(
-    ObjectInstanceHandle theObject,
-    ObjectClassHandle theObjectClass)
-    throw (
-        FederateInternalError);
+        ObjectInstanceHandle theObject, 
+        ObjectClassHandle theObjectClass)
+        throw (FederateInternalError);
+
+    ////////////////////////////////////////////////////////
+	//  Implementation methods to handle reflect event //
+	///////////////////////////////////////////////////////
+    void reflectAttributeValuesImpl(
+        ObjectInstanceHandle theObject,
+        AttributeHandleValueMap const & theAttributeValues)
+        throw (FederateInternalError);
+
+    ////////////////////////////////////////////////////////////
+    //  Implementation methods to handle remove object event //
+    ///////////////////////////////////////////////////////////
+    void removeObjectInstanceImpl(
+        ObjectInstanceHandle theObject)
+        throw (FederateInternalError);
+
+    ////////////////////////////////////////////////////////////////
+	//  Implementation methods to handle provide Attribute event //
+	///////////////////////////////////////////////////////////////
+    void provideAttributeValueUpdateImpl(
+        ObjectInstanceHandle theObject,
+        AttributeHandleSet const & theAttributes)
+        throw (FederateInternalError);
 
     //////////////////
 	//  Discovery  //
@@ -77,4 +99,77 @@ public:
 		FederateHandle producingFederate)
 		throw (
 			FederateInternalError);
+
+    ////////////////
+	//  Reflect  //
+	///////////////
+    void reflectAttributeValues(
+        ObjectInstanceHandle theObject,
+        AttributeHandleValueMap const & theAttributeValues,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        TransportationType theType,
+        SupplementalReflectInfo theReflectInfo)
+        throw (FederateInternalError);
+
+    void reflectAttributeValues(
+        ObjectInstanceHandle theObject,
+        AttributeHandleValueMap const & theAttributeValues,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        TransportationType theType,
+        LogicalTime const & theTime,
+        OrderType receivedOrder,
+        SupplementalReflectInfo theReflectInfo)
+        throw (FederateInternalError);
+
+    void reflectAttributeValues(
+        ObjectInstanceHandle theObject,
+        AttributeHandleValueMap const & theAttributeValues,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        TransportationType theType,
+        LogicalTime const & theTime,
+        OrderType receivedOrder,
+        MessageRetractionHandle theHandle,
+        SupplementalReflectInfo theReflectInfo)
+        throw (FederateInternalError);
+
+    //////////////
+	//  Remove  //
+	/////////////
+    void removeObjectInstance(
+        ObjectInstanceHandle theObject,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        SupplementalRemoveInfo theRemoveInfo)
+        throw (FederateInternalError);
+
+    void removeObjectInstance(
+        ObjectInstanceHandle theObject,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        LogicalTime const & theTime,
+        OrderType receivedOrder,
+        SupplementalRemoveInfo theRemoveInfo)
+        throw (FederateInternalError);
+
+    void removeObjectInstance(
+        ObjectInstanceHandle theObject,
+        VariableLengthData const & theUserSuppliedTag,
+        OrderType sentOrder,
+        LogicalTime const & theTime,
+        OrderType receivedOrder,
+        MessageRetractionHandle theHandle,
+        SupplementalRemoveInfo theRemoveInfo)
+        throw (FederateInternalError);
+
+    ///////////////
+	//  Provide  //
+	//////////////
+    void provideAttributeValueUpdate(
+        ObjectInstanceHandle theObject,
+        AttributeHandleSet const & theAttributes,
+        VariableLengthData const & theUserSuppliedTag)
+        throw (FederateInternalError);
 };
